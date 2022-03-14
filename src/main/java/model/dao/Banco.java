@@ -9,8 +9,8 @@ import java.sql.Statement;
 
 public class Banco {
 
-	//private static final String DRIVER = "com.mysql.jdbc.Driver"; //MYSQL vers„o 5
-	private static final String DRIVER = "com.mysql.cj.jdbc.Driver"; //MYSQL vers„o 8
+	//private static final String DRIVER = "com.mysql.jdbc.Driver"; //MYSQL vers√£o 5
+	private static final String DRIVER = "com.mysql.cj.jdbc.Driver"; //MYSQL vers√£o 8
 	private static final String BANCODADOS = "telefonia";
 	private static final String CONEXAO = "jdbc:mysql://localhost:3306/" 
 			+ BANCODADOS + "?useTimezone=true&serverTimezone=UTC&useSSL=false";
@@ -40,7 +40,7 @@ public class Banco {
 				conn.close();
 			}
 		} catch (SQLException e) {
-			System.out.println("Problema no fechamento da conex„o.");
+			System.out.println("Problema no fechamento da conex√£o.");
 			System.out.println("Erro: " + e.getMessage());
 		}	
 	}

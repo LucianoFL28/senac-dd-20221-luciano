@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import model.entity.Endereco;
+import model.entity.Telefone;
 
 public class EnderecoDAO {
 
@@ -31,7 +32,7 @@ public class EnderecoDAO {
 				novoEndereco.setId(chavesGeradas.getInt(1));
 			}
 		} catch (SQLException e) {
-			System.out.println("Erro ao inserir endereÁo. Causa:" + e.getMessage());
+			System.out.println("Erro ao inserir endere√ßo. Causa:" + e.getMessage());
 		}
 		
 		return novoEndereco;
@@ -57,7 +58,7 @@ public class EnderecoDAO {
 			int linhasAfetadas = stmt.executeUpdate();
 			atualizou = linhasAfetadas > 0;
 		} catch (SQLException e) {
-			System.out.println("Erro ao atualizar endereÁo. Causa:" + e.getMessage());
+			System.out.println("Erro ao atualizar endere√ßo. Causa:" + e.getMessage());
 		}
 		
 		return atualizou;
@@ -75,7 +76,7 @@ public class EnderecoDAO {
 			stmt.setInt(1, id);
 			removeu = stmt.executeUpdate() > 0;
 		} catch (SQLException e) {
-			System.out.println("Erro ao remover endereÁo. Causa:" + e.getMessage());
+			System.out.println("Erro ao remover endere√ßo. Causa:" + e.getMessage());
 		}		
 		
 		return removeu;
@@ -83,8 +84,25 @@ public class EnderecoDAO {
 	
 	public Endereco consultar(int id) {
 		Endereco enderecoConsultado = null;
-		//TODO implementar		
-		//SELECT * FROM ENDERECO WHERE ID = ?
+		Connection conexao = Banco.getConnection();
+		String sql = " SELECT * FROM TELEFONE "
+					+" WHERE ID=?";
+		PreparedStatement stmt = Banco.getPreparedStatement(conexao, sql);
+		
+		try {
+			ResultSet resultado = stmt.executeQuery();
+			
+			if(resultado.next()) {
+				enderecoConsultado = new Endereco();
+				enderecoConsultado.setId(resultado.getInt("id"));
+				enderecoConsultado.setRua(resultado.getString("rua"));
+				enderecoConsultado.setCidade(resultado.getString("numero"));
+				enderecoConsultado.setCep(resultado.getString("cep"));
+				enderecoConsultado.setUf(resultado.getString("uf"));
+			}
+		} catch (SQLException e) {
+			System.out.println("Erro ao consultar endere√ßo (id:" + id + ". Causa:" + e.getMessage());
+		}
 		
 		return enderecoConsultado;
 	}

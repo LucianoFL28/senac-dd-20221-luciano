@@ -1,12 +1,19 @@
 package model.dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;import java.time.LocalDateTime;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 
+import model.entity.Endereco;
 import model.entity.LinhaTelefonica;
+import model.entity.Telefone;
+import util.DateUtils;
 
 public class LinhaTelefonicaDAO {
 	public LinhaTelefonica inserir(LinhaTelefonica novaLinha) {
@@ -29,7 +36,7 @@ public class LinhaTelefonicaDAO {
 				novaLinha.setId(chavesGeradas.getInt(1));
 			}
 		} catch (SQLException e) {
-			System.out.println("Erro ao inserir linha telef鬾ica. Causa:" + e.getMessage());
+			System.out.println("Erro ao inserir linha telef么nica. Causa:" + e.getMessage());
 		}
 		
 		return novaLinha;
@@ -53,7 +60,7 @@ public class LinhaTelefonicaDAO {
 			int linhasAfetadas = stmt.executeUpdate();
 			atualizou = linhasAfetadas > 0;
 		} catch (SQLException e) {
-			System.out.println("Erro ao atualizar linha telef鬾ica. Causa:" + e.getMessage());
+			System.out.println("Erro ao atualizar linha telef么nica. Causa:" + e.getMessage());
 		}
 		
 		return atualizou;
@@ -71,25 +78,77 @@ public class LinhaTelefonicaDAO {
 			stmt.setInt(1, id);
 			removeu = stmt.executeUpdate() > 0;
 		} catch (SQLException e) {
-			System.out.println("Erro ao remover linha telef鬾ica. Causa:" + e.getMessage());
+			System.out.println("Erro ao remover linha telef么nica. Causa:" + e.getMessage());
 		}		
 		
 		return removeu;
 	}
 	
 	public LinhaTelefonica consultar(int id) {
-		LinhaTelefonica linhaTelefonicaConsultado = null;
-		//TODO implementar		
-		//SELECT * FROM LINHA_TELEFONICA WHERE ID = ?
+		LinhaTelefonica linhaTelefonicaConsultada = null;
+		Connection conexao = Banco.getConnection();
+		String sql = " SELECT * FROM LINHA_TELEFONICA "
+					+" WHERE ID=?";
+		PreparedStatement stmt = Banco.getPreparedStatement(conexao, sql);
 		
-		return linhaTelefonicaConsultado;
+		try {
+			stmt.setInt(1, id);
+			ResultSet resultado = stmt.executeQuery();
+			
+			if(resultado.next()) {
+				linhaTelefonicaConsultada = construirDoResultSet(resultado);
+			}
+		} catch (SQLException e) {
+			System.out.println("Erro ao consultar linha telef么nica (id:" + id + ". Causa:" + e.getMessage());
+		}
+		
+		return linhaTelefonicaConsultada;
 	}
 	
+	private LinhaTelefonica construirDoResultSet(ResultSet resultado) throws SQLException {
+		LinhaTelefonica linhaTelefonicaConsultada = new LinhaTelefonica();
+		linhaTelefonicaConsultada.setId(resultado.getInt("id"));
+		linhaTelefonicaConsultada.setIdCliente(resultado.getInt("id_cliente"));
+		
+		Date dataAtivacao = resultado.getDate("data_ativacao");
+		Date dataDesativacao = resultado.getDate("data_desativacao");
+		
+		linhaTelefonicaConsultada.setDataAtivacao(DateUtils.converterParaLocalDateTime(dataAtivacao));
+		linhaTelefonicaConsultada.setDataDesativacao(DateUtils.converterParaLocalDateTime(dataDesativacao));
+		
+		TelefoneDAO telefoneDAO = new TelefoneDAO();
+		Telefone t = telefoneDAO.consultar(resultado.getInt("id_telefone"));
+		linhaTelefonicaConsultada.setTelefone(t);
+		
+		return linhaTelefonicaConsultada;
+	}
+
 	public ArrayList<LinhaTelefonica> consultarTodos(){
 		ArrayList<LinhaTelefonica> linhaTelefonicas = new ArrayList<LinhaTelefonica>();
 		//TODO implementar
 		//SELECT * FROM LINHA_TELEFONICA
 		
 		return linhaTelefonicas;
+	}
+
+	public ArrayList<LinhaTelefonica> consultarPorIdCliente(int idCliente) {
+		ArrayList<LinhaTelefonica> linhasDoCliente = new ArrayList<LinhaTelefonica>();
+		Connection conexao = Banco.getConnection();
+		String sql = " SELECT * FROM LINHA_TELEFONICA "
+					+" WHERE ID_CLIENTE=?";
+		PreparedStatement stmt = Banco.getPreparedStatement(conexao, sql);
+		
+		try {
+			stmt.setInt(1, idCliente);
+			ResultSet resultado = stmt.executeQuery();
+			while(resultado.next()) {
+				LinhaTelefonica linha = construirDoResultSet(resultado);
+				linhasDoCliente.add(linha);
+			}
+		} catch (SQLException e) {
+			System.out.println("Erro ao consultar linhas telef么nicas do cliente (idCliente:" + idCliente + ". Causa:" + e.getMessage());
+		}
+		
+		return linhasDoCliente;
 	}
 }

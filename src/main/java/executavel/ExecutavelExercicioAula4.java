@@ -13,25 +13,25 @@ import model.entity.Telefone;
 public class ExecutavelExercicioAula4 {
 
 	public static void main(String[] argumentos) {
-		//TESTE (aula 4) --> NÃO chamar DAO diretamente da View!
+		//TESTE (aula 4) --> NÃ£o chamar DAO diretamente da View!
 		/*
-		Endereco novo = new Endereco("Anita Garibaldi", "300", "Florianópolis", 
+		Endereco novo = new Endereco("Anita Garibaldi", "300", "FlorianÃ³polis", 
 				"SC", "88320005");
 
 		novo.setId(1);
 		
 		EnderecoDAO dao = new EnderecoDAO();
 		if(dao.atualizar(novo)) {
-			System.out.println("Endereço atualizado");
+			System.out.println("EndereÃ§o atualizado");
 		}else {
-			System.out.println("NÃO atualizou");
+			System.out.println("NÃ£o atualizou");
 		}
 		dao.remover(1);
 		dao.inserir(novo);
 		if(novo.getId() > 0) {
 			System.out.println("Salvo com sucesso. Id: " + novo.getId());
 		}else {
-			System.out.println("NÃO salvou endereço");
+			System.out.println("NÃ£o salvou endereÃ§o");
 		}
 		*/
 		
