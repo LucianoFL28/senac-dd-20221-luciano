@@ -14,21 +14,33 @@ import model.entity.Cliente;
 import model.entity.Endereco;
 import model.entity.LinhaTelefonica;
 import model.entity.Telefone;
+import model.exception.ClienteComLinhaTelefonicaException;
 
 public class ExecutavelTelefonia {
 
 	public static void main(String[] argumentos) {
-//		testarCrudEndereco();
-//		testarCrudCliente();
-//		
-//		//TODO Exercicio
-//		testarCrudTelefone();
-		//testarCrudLinhaTelefonica();
+		testarExclusaoClienteComJOptionPane();
+	}
+
+	private static void testarExclusaoClienteComJOptionPane() {
+		ClienteController controller = new ClienteController();
+		ArrayList<Cliente> clientes = controller.consultarTodos();
 		
-		testarCadastroClienteComJOptionPane();
+		Cliente clienteParaExcluir = (Cliente) JOptionPane.showInputDialog(null, 
+				"Selecione o cliente", "Exclusão de cliente",
+				JOptionPane.INFORMATION_MESSAGE, null,
+				clientes.toArray(),
+				null);
 		
-		//TODO exercício (implementar o cadastro com MVC completo)
-		testarCadastroEnderecoComJOptionPane();
+		String mensagem;
+		try {
+			mensagem = controller.excluir(clienteParaExcluir);
+			JOptionPane.showMessageDialog(null, mensagem);
+		} catch (ClienteComLinhaTelefonicaException e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Atenção", JOptionPane.WARNING_MESSAGE);
+		}
+		
+		testarExclusaoClienteComJOptionPane();
 	}
 
 	private static void testarCadastroClienteComJOptionPane() {

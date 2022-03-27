@@ -1,7 +1,12 @@
 package controller;
 
+import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
+
 import model.bo.ClienteBO;
 import model.entity.Cliente;
+import model.exception.ClienteComLinhaTelefonicaException;
 
 public class ClienteController {
 
@@ -24,6 +29,21 @@ public class ClienteController {
 		
 		if(mensagem.isEmpty()) {
 			mensagem = bo.salvar(novo);
+		}
+		
+		return mensagem;
+	}
+
+	public ArrayList<Cliente> consultarTodos() {
+		return bo.consultarTodos();
+	}
+
+	public String excluir(Cliente clienteParaExcluir) throws ClienteComLinhaTelefonicaException {
+		String mensagem = "";
+		
+		if(bo.excluir(clienteParaExcluir)) {
+			mensagem = "Cliente " + clienteParaExcluir.getNome() 
+				+ " (" + clienteParaExcluir.getCpf() + ") foi excluído";
 		}
 		
 		return mensagem;
